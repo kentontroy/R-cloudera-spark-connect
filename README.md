@@ -16,11 +16,12 @@ CXX17 = g++
 CXX17STD = -std=c++17 -fPIC
 
 sudo yum install devtoolset-9-toolchain
-scl enable devtoolset-9 bash
-
-
 ```
-
+```
+scl enable devtoolset-9 bash
+./cdeconnect/bin/activate
+R
+```
 ```
 install.packages("reticulate")
 install.packages("remotes")
