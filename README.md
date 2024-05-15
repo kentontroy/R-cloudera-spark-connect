@@ -18,8 +18,24 @@ CXX17STD = -std=c++17 -fPIC
 sudo yum install devtoolset-9-toolchain
 ```
 ```
+cd /home/centos/posit
+
 scl enable devtoolset-9 bash
+
 . cdeconnect/bin/activate
+
+export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/home/centos/posit/cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
+
+cat cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
+# ECS Master
+-----BEGIN CERTIFICATE-----
+MIIDKTCCAs+gAwIBAgIQKBlOEAQfW+WR42MQDghqazAKBggqhkjOPQQDAjAkMSIw
+......
+# xlsxlrpb.cde-558hm9hd.apps.cdppvcds.com
+-----BEGIN CERTIFICATE-----
+MIIDMTCCAhmgAwIBAgIUI080GcfjKeCW8Iq9Ex6rSnVK3q8wDQYJKoZIhvcNAQEL
+......
+
 R
 ```
 ```
