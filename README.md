@@ -19,7 +19,7 @@ sudo yum install devtoolset-9-toolchain
 ```
 ```
 scl enable devtoolset-9 bash
-./cdeconnect/bin/activate
+. cdeconnect/bin/activate
 R
 ```
 ```
