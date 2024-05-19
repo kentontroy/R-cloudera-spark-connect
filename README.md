@@ -1,4 +1,4 @@
-# R-cloudera-spark-connect
+# cloudera-rstudio-spark-connect
 
 ```
 cat /etc/redhat-release
