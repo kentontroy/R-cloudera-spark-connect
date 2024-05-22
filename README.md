@@ -2,7 +2,7 @@
 
 ## Create a CDE session of type 'spark-connect' if necessary
 ```
-> cat cde_create_session.sh
+% cat cde_create_session.sh
 #!/bin/bash
 
 ./cde session create \
@@ -11,35 +11,35 @@
   --description "Please do not delete - in use by Posit" \
   --ttl 8h
 
-> ./cde_create_session.sh
+% ./cde_create_session.sh
 ```
 
 ## Setup pre-requisistes for C++ bindings
 ```
-> cat /etc/redhat-release
+% cat /etc/redhat-release
 CentOS Linux release 7.9.2009 (Core)
 
-> sudo yum group install "Development Tools"
-> cat $HOME/.R/Makevars
+% sudo yum group install "Development Tools"
+% cat $HOME/.R/Makevars
 CXX11 = g++
 CXX14 = g++
 CXX17 = g++
 CXX17STD = -std=c++17 -fPIC
 
-> sudo yum install devtoolset-9-toolchain
-> gcc --version
+% sudo yum install devtoolset-9-toolchain
+% gcc --version
 gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
 
 ```
 ## Instantiate python virtual environment
 ```
-> cd /home/centos/posit
-> scl enable devtoolset-9 bash
-> . cdeconnect/bin/activate
+% cd /home/centos/posit
+% scl enable devtoolset-9 bash
+% . cdeconnect/bin/activate
 
-> export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/home/centos/posit/cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
+% export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/home/centos/posit/cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
 
-> cat cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
+% cat cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
 # ECS Master
 -----BEGIN CERTIFICATE-----
 MIIDKTCCAs+gAwIBAgIQKBlOEAQfW+WR42MQDghqazAKBggqhkjOPQQDAjAkMSIw
@@ -52,7 +52,7 @@ MIIDMTCCAhmgAwIBAgIUI080GcfjKeCW8Iq9Ex6rSnVK3q8wDQYJKoZIhvcNAQEL
 
 ## Execute R code for package installation and setup
 ```
-> R
+% R
 > install.packages("reticulate")
 > install.packages("remotes")
 > remotes::install_github("mlverse/pysparklyr", ref = "cde")
