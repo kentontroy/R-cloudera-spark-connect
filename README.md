@@ -1,5 +1,19 @@
 # cloudera-rstudio-spark-connect
 
+## Create a CDE session of type 'spark-connect' if necessary
+```
+> cat cde_create_session.sh
+#!/bin/bash
+
+./cde session create \
+  --name test-spark-connect \
+  --type spark-connect \
+  --description "Please do not delete - in use by Posit" \
+  --ttl 8h
+
+> ./cde_create_session.sh
+```
+
 ## Setup pre-requisistes for C++ bindings
 ```
 > cat /etc/redhat-release
