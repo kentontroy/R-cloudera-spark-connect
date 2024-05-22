@@ -1,32 +1,31 @@
 # cloudera-rstudio-spark-connect
 
+## Setup pre-requisistes for C++ bindings
 ```
-cat /etc/redhat-release
+> cat /etc/redhat-release
 CentOS Linux release 7.9.2009 (Core)
 
-sudo yum group install "Development Tools"
-gcc --version
-gcc --version
+> sudo yum group install "Development Tools"
+> gcc --version
 gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
 
-cat $HOME/.R/Makevars
+> cat $HOME/.R/Makevars
 CXX11 = g++
 CXX14 = g++
 CXX17 = g++
 CXX17STD = -std=c++17 -fPIC
 
-sudo yum install devtoolset-9-toolchain
+> sudo yum install devtoolset-9-toolchain
 ```
+## Instantiate python virtual environment
 ```
-cd /home/centos/posit
+> cd /home/centos/posit
+> scl enable devtoolset-9 bash
+> . cdeconnect/bin/activate
 
-scl enable devtoolset-9 bash
+> export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/home/centos/posit/cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
 
-. cdeconnect/bin/activate
-
-export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH=/home/centos/posit/cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
-
-cat cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
+> cat cdeconnect/lib/python3.8/site-packages/certifi/cacert.pem
 # ECS Master
 -----BEGIN CERTIFICATE-----
 MIIDKTCCAs+gAwIBAgIQKBlOEAQfW+WR42MQDghqazAKBggqhkjOPQQDAjAkMSIw
@@ -35,21 +34,22 @@ MIIDKTCCAs+gAwIBAgIQKBlOEAQfW+WR42MQDghqazAKBggqhkjOPQQDAjAkMSIw
 -----BEGIN CERTIFICATE-----
 MIIDMTCCAhmgAwIBAgIUI080GcfjKeCW8Iq9Ex6rSnVK3q8wDQYJKoZIhvcNAQEL
 ......
-
-R
 ```
+
+## Execute R code for package installation and setup
 ```
-install.packages("reticulate")
-install.packages("remotes")
-install.packages("pysparklyr")
-remotes::install_github("mlverse/pysparklyr", ref = "cde")
+> R
+> install.packages("reticulate")
+> install.packages("remotes")
+> remotes::install_github("mlverse/pysparklyr", ref = "cde")
 
-library(sparklyr)
-library(pysparklyr)
-library(remotes)
+> library(sparklyr)
+> library(pysparklyr)
+> library(remotes)
+> library(reticulate)
 
-reticulate::use_virtualenv("/home/centos/posit/cdeconnect", required=TRUE)
-reticulate::py_list_packages()
+> reticulate::use_virtualenv("/home/centos/posit/cdeconnect", required=TRUE)
+> reticulate::py_list_packages()
                     package     version                      requirement
 1                cdeconnect       0.1.0                cdeconnect==0.1.0
 2                   certifi    2024.2.2                certifi==2024.2.2
@@ -86,19 +86,25 @@ reticulate::py_list_packages()
 33             vyper-config       1.2.1              vyper-config==1.2.1
 34                 watchdog       4.0.0                  watchdog==4.0.
 
-sc <- spark_connect(method = "cde_connect", session_name = "test-spark-connect")
-Error in py_call_impl(callable, call_args$unnamed, call_args$named) : 
-  TypeError: __init__() missing 2 required positional arguments: 'file_location' and 'session_name'
-Run `reticulate::py_last_error()` for details.
-
-reticulate::py_last_error()
-
-── Python Exception Message ──────────────────────────────────────────────────────────────────────────
-Traceback (most recent call last):
-  File "/home/centos/posit/cdeconnect/lib/python3.8/site-packages/cde/session.py", line 144, in get
-    return self._from_config(Config(), self._headers)
-TypeError: __init__() missing 2 required positional arguments: 'file_location' and 'session_name'
-
-
+> sc <- spark_connect("test-spark-connect", method = "cde_connect")
+> 
+```
+## Copy data to Spark and run simple dplyr test
+```
+> library(dplyr)
+> iris_tbl <- sdf_copy_to(sc = sc, x = iris, overwrite = T)
+> summaryStats <- iris_tbl %>%
+   group_by(Species) %>%
+   summarise(count = n(), 
+             avgSepalLength = mean(Sepal_Length),
+             avgSepalWidth= mean(Sepal_Width)) %>%
+   collect
+> summaryStats
+# A tibble: 3 × 4
+  Species    count avgSepalLength avgSepalWidth
+  <chr>      <dbl>          <dbl>         <dbl>
+1 versicolor    50           5.94          2.77
+2 setosa        50           5.01          3.43
+3 virginica     50           6.59          2.97
 
 ```
