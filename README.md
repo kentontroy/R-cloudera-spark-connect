@@ -6,9 +6,6 @@
 CentOS Linux release 7.9.2009 (Core)
 
 > sudo yum group install "Development Tools"
-> gcc --version
-gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
-
 > cat $HOME/.R/Makevars
 CXX11 = g++
 CXX14 = g++
@@ -16,6 +13,9 @@ CXX17 = g++
 CXX17STD = -std=c++17 -fPIC
 
 > sudo yum install devtoolset-9-toolchain
+> gcc --version
+gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2)
+
 ```
 ## Instantiate python virtual environment
 ```
