@@ -103,7 +103,7 @@ MIIDMTCCAhmgAwIBAgIUI080GcfjKeCW8Iq9Ex6rSnVK3q8wDQYJKoZIhvcNAQEL
 > sc <- spark_connect("test-spark-connect", method = "cde_connect")
 > 
 ```
-## Copy data to Spark and run simple dplyr test
+## Execute R code to copy data to Spark and run simple dplyr test
 ```
 > library(dplyr)
 > iris_tbl <- sdf_copy_to(sc = sc, x = iris, overwrite = T)
